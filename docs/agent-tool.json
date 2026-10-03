@@ -1,0 +1,8 @@
+{
+  "name": "plan_date_night",
+  "description": "Create a three-stop date plan or Qloo-grounded discovery shortlist that balances two sets of public cultural tastes. Does not book anything. Live mode sends the selected cultural entity IDs and city to Qloo; sensitive traits and private personal information are not accepted.",
+  "endpoint": {"method":"POST","path":"/api/plan"},
+  "inputSchema": {"type":"object","additionalProperties":false,"required":["mode","people","budget","vibe","location","startTime"],"properties":{"mode":{"enum":["sample","live"]},"people":{"type":"array","minItems":2,"maxItems":2,"items":{"type":"array","minItems":1,"maxItems":5,"items":{"type":"string"}}},"budget":{"type":"integer","minimum":50,"maximum":250},"vibe":{"enum":["intimate","playful","creative","relaxed"]},"location":{"type":"string","minLength":2,"maxLength":100},"startTime":{"type":"string","pattern":"^([01]\\d|2[0-3]):[0-5]\\d$"}}},
+  "outputNotes":["mode and source identify data provenance","trace exposes the planner workflow","warnings explain unverified or fictional fields","cost is null for live recommendations","scores are application indices, not probabilities or personal-trait inferences"],
+  "example":{"mode":"sample","people":[["jazz","cinema"],["books","soul"]],"budget":140,"vibe":"intimate","location":"New York City","startTime":"18:00"}
+}

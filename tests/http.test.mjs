@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';import http from 'node:http';import{createApi}from'../lib/http.mjs';
+const handler=createApi({env:{}}),server=http.createServer((req,res)=>handler(req,res));await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const base=`http://127.0.0.1:${server.address().port}`;test.after(()=>server.close());
+const input={mode:'sample',people:[['jazz'],['books']],budget:140,vibe:'intimate',location:'New York City',startTime:'18:00'};
+test('status is safe, reports disabled, and includes no secret',async()=>{const r=await fetch(`${base}/api/status`),body=await r.json();assert.equal(r.status,200);assert.equal(body.enabled,false);assert.ok(!JSON.stringify(body).includes('API_KEY'));assert.equal(r.headers.get('x-content-type-options'),'nosniff');});
+test('sample plan endpoint completes end to end',async()=>{const r=await fetch(`${base}/api/plan`,{method:'POST',body:JSON.stringify(input)});assert.equal(r.status,200);assert.equal((await r.json()).stops.length,3);});
+test('malformed JSON and oversized request rejected',async()=>{let r=await fetch(`${base}/api/plan`,{method:'POST',body:'{'});assert.equal(r.status,400);r=await fetch(`${base}/api/plan`,{method:'POST',body:'x'.repeat(13000)});assert.equal(r.status,413);});
+test('cross-site API calls rejected',async()=>{const r=await fetch(`${base}/api/plan`,{method:'POST',headers:{'sec-fetch-site':'cross-site'},body:JSON.stringify(input)});assert.equal(r.status,403);});
+test('live search fails honestly while unconfigured',async()=>{const r=await fetch(`${base}/api/search?q=Nina&type=artist`);assert.equal(r.status,503);assert.equal((await r.json()).code,'QLOO_NOT_CONFIGURED');});
+test('unknown endpoints are 404',async()=>{const r=await fetch(`${base}/api/secret`);assert.equal(r.status,404);});
