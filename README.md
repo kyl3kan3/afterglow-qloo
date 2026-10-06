@@ -59,9 +59,9 @@ Live mode produces a three-place discovery shortlist, not a verified dinner/acti
 
 ## Live connection and release
 
-Live access is deliberately off. No real credential was read, copied, configured or used during this build. Follow [INTEGRATION.md](docs/INTEGRATION.md) after the owner approves server-side credential configuration and a bounded live test. Never put keys in this repository, the browser or chat.
+Public live access is blocked in code. Isolated stdio live tests require a durable ten-request maximum budget; see [TEST_BUDGET.md](docs/TEST_BUDGET.md). No real credential was read, copied, configured or used during this build. Follow [INTEGRATION.md](docs/INTEGRATION.md) after the owner approves server-side credential configuration and a bounded live test. Never put keys in this repository, the browser or chat.
 
-`vercel.json` is a deployment starting point, **not a verified deployment**. Publication is prepared as an explicitly labeled sample demo. Live Qloo access requires bounded credential testing and durable public-demo rate limiting before it is enabled. See the verification document for completed and pending checks.
+`vercel.json` is a deployment starting point, **not a verified deployment**. Publication is prepared as an explicitly labeled sample demo. Live Vercel access remains unimplemented until shared durable quota storage and access controls are configured and tested. The SQLite test route does not make the hosted app live-ready. See the verification document for completed and pending checks.
 
 ## Agentic tool interface
 

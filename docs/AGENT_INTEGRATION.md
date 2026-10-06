@@ -1,3 +1,5 @@
+> Version 0.3: public HTTP live calls are blocked. Only isolated stdio can run live tests with a durable shared ledger. See [test budget](TEST_BUDGET.md). This does not make the Vercel app live-ready.
+
 # Afterglow as an agentic tool
 
 ## Exact status

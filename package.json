@@ -1,6 +1,6 @@
 {
   "name": "afterglow-qloo",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "A two-taste date-night planner with transparent Qloo grounding.",
@@ -12,7 +12,8 @@
     "test": "node --test tests/*.test.mjs",
     "check": "node scripts/check.mjs",
     "build": "node scripts/build.mjs",
-    "mcp": "node mcp-server.mjs"
+    "mcp": "node mcp-server.mjs",
+    "test-budget": "node scripts/test-budget.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.0",

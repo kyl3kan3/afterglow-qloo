@@ -1,8 +1,8 @@
-# Verification — October 3, 2026
+# Verification — October 6, 2026
 
 ## Passed
 
-- 51 automated tests in Node, including jsdom UI interaction tests
+- 63 automated tests in Node, including jsdom UI interaction tests
 - Real MCP stdio subprocess handshake, tool discovery, planning/replanning and safe tool errors
 - Stateless Streamable HTTP MCP requests using the official client SDK
 - Live-mode MCP path exercised against clearly labeled fixtures, with raw Qloo provenance preserved
@@ -18,7 +18,16 @@
 - Save, reopen, revise, remove, sample taste limits, preserved results after validation errors and HTML escaping in DOM tests
 - Form edits do not alter the existing itinerary's explanation until a new plan is generated
 
+- Twenty competing OS processes were limited to ten durable reservations
+- Failed calls consume quota; client restarts, missing/corrupt state and expired budgets fail closed
+- Public HTTP, Vercel preview/production and production Node contexts cannot call Qloo even with live flags
+- Installed official harness executed against an in-process no-network fetch fixture; guard enforces exact endpoint, one HTTPS attempt and redirect rejection, including actual CLI 421/429/503 transport fixtures
+
+- Prepared hosted quota adapter passes fixture tests for atomic-command shape, rejected destinations, malformed replies, redaction and no retries
+
 ## Not verified
+
+- Actual shared Redis storage, its concurrency/durability and hosted live access are unconfigured and unverified
 
 - A real LLM/agent host deciding to invoke the tools with live Qloo data
 - Live Qloo authentication or response behavior: no real credential or live API call used
@@ -41,4 +50,4 @@ The installed Chromium process failed to create its required Unix socket (`Opera
 3. Run real browser QA on desktop and phone widths, keyboard, Escape/reopen, save/reload, swap and export
 4. Add durable deployment-level usage controls before public live access
 5. Verify serverless packaging on a preview deployment
-6. Publish the approved MIT source and sample demo; record the verified deployment and commit
+6. Source is published under MIT; publish and verify the sample demo, then record the deployment and commit
