@@ -1,4 +1,4 @@
-> Version 0.3: public HTTP live calls are blocked. Only isolated stdio can run live tests with a durable shared ledger. See [test budget](TEST_BUDGET.md). This does not make the Vercel app live-ready.
+> Version 0.4: production live calls remain blocked. Isolated stdio and explicitly enabled protected Vercel previews can use a durable shared test budget. Hosted credentials, datastore validation and a real agent/Qloo run remain pending. See [test budget](TEST_BUDGET.md).
 
 # Afterglow as an agentic tool
 
@@ -41,7 +41,7 @@ npm start
 
 `/api/mcp` accepts POST requests using official MCP SDK transport with stateless JSON responses. A compatible client performs normal MCP initialization, discovery and tools/call requests. GET streams and DELETE sessions are not supported because no server session is retained.
 
-For hosting, the Vercel route is `api/mcp.js`. Set `AFTERGLOW_ORIGIN` to the exact verified deployment origin. The endpoint rejects foreign Host/Origin headers and cross-site browser requests. Public live access still needs deployment-level rate/usage controls and bundle verification before release.
+For hosting, the Vercel route is `api/mcp.js`. Set `AFTERGLOW_ORIGIN` to the exact verified deployment origin. The endpoint rejects foreign Host/Origin headers and cross-site browser requests. An explicitly enabled protected preview derives its sole allowed host/origin from Vercel’s unique deployment URL; aliases and custom domains cannot access that test route. Public live access still needs deployment-level rate/usage controls and bundle verification before release.
 
 ## What still must be demonstrated
 

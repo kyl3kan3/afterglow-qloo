@@ -2,7 +2,7 @@
 
 ## Required approvals before live work
 
-The owner has approved Qloo configuration and up to ten included-quota tests. Credentials still require direct secure owner entry, and quota/expiry must be verified. The sample is deployed through the existing authenticated Vercel connector. Its environment-variable writes are blocked with HTTP 403, so owner entry is still required. No live request has been made. Public HTTP/Vercel live execution is now blocked in code; see [TEST_BUDGET.md](TEST_BUDGET.md).
+The owner has approved Qloo configuration and up to ten included-quota tests. Credentials still require direct secure owner entry, and quota/expiry must be verified. The sample is deployed through the existing authenticated Vercel connector. Its environment-variable writes are blocked with HTTP 403, so owner entry is still required. No live request has been made. Production live execution is blocked in code; the protected-preview route remains disabled pending its access/store checks; see [TEST_BUDGET.md](TEST_BUDGET.md).
 
 1. Approve entering the owner's event-issued Qloo credential into the chosen backend's secret store. The owner must enter it through an authorized secure mechanism; do not paste it into chat or source files. Destination should be specified (for example, the new Afterglow project on the owner's Vercel account). This creates ongoing server access to Qloo.
 2. Confirm the event credential's quota, rate limit and expiry, then approve an initial cap of ten live requests using only public cultural favorites and a city. No paid requests are authorized by this build.
@@ -10,11 +10,12 @@ The owner has approved Qloo configuration and up to ten included-quota tests. Cr
 
 ## Exact runtime configuration
 
-- `QLOO_ENABLED=true`: isolated stdio opt-in gate; defaults off and cannot enable HTTP/Vercel live access
+- `QLOO_ENABLED=true`: live-test opt-in gate; defaults off and cannot enable production live access
 - `QLOO_TEST_LEDGER`: absolute path to the single pre-initialized durable SQLite test ledger; never create a second ledger for the same approval
 - `QLOO_API_KEY`: event-issued credential in the backend secret store only
 - `QLOO_BASE_URL=https://hackathon.api.qloo.com`: optional explicit value; any other configured endpoint is rejected
 - `AFTERGLOW_ORIGIN`: exact verified deployment origin (e.g. the new project’s https origin), required to allow its hostname for HTTP MCP; localhost is permitted for local testing
+- Protected-preview configuration is listed in [TEST_BUDGET.md](TEST_BUDGET.md); it uses the same cap through Redis across all search, planning and MCP calls
 - `PORT=4177`: local development only
 
 The adapter pins `@qloo/qloo-harness` 0.1.26. The application pins Node 24.x (the harness itself requires at least 22.19.0). It invokes the official `qloo api search` and `qloo api insights` surfaces using `execFile`, no shell, a 20-second timeout and 2 MiB output cap. Arguments include required `--query` / `--type` options and validated JSON parameters. The key is never a command argument.
@@ -37,14 +38,14 @@ The installed official harness's help, bundled implementation and `--dry-run` ar
 
 ## Planned live smoke test (maximum 10 requests)
 
-1. Check `afterglow_status` over isolated stdio: configured, no key in response (zero Qloo requests); inspect the ledger separately for remaining quota
-2. Search two public cultural entities via the isolated stdio `afterglow_search_favorites` tool (two Qloo requests)
-3. Call `afterglow_plan_evening` over isolated stdio with confirmed entity IDs and a city (two insights requests)
+1. Check `afterglow_status` over the selected isolated stdio or protected-preview transport: configured, no key in response (zero Qloo requests); inspect the ledger separately for remaining quota
+2. Search two public cultural entities via the `afterglow_search_favorites` tool (two Qloo requests)
+3. Call `afterglow_plan_evening` with confirmed entity IDs and a city (two insights requests)
 4. Verify at least three shared actual entities and review labels/provenance. Sparse overlap returns a clear 422, never sample filler.
-5. Re-run identical queries within 60 seconds to check cache behavior; no additional Qloo calls expected
+5. Re-run identical queries within 60 seconds to check cache behavior; no additional Qloo calls expected only when the same process handles the request; a cold start uses new slots
 6. If necessary, use at most six remaining requests to broaden public signals/location and verify the actual API response. Stop on authentication, expiry, quota or rate-limit errors.
 
-A plan uses two independent place-insight requests, each limited to 20 results. Search uses six results. There is a 60-second, 50-entry per-process cache. Every cache miss reserves one durable SQLite slot before a harness child starts. A Node preload guard permits only one fetch to the approved endpoint and rejects redirects/repeated attempts. Failures consume quota. The single shared ledger caps the authorized isolated test at ten upstream attempts across processes and restarts. It never auto-initializes or resets. This only applies to one durable local filesystem, not Vercel or multiple machines.
+A plan uses two independent place-insight requests, each limited to 20 results. Search uses six results. There is a 60-second, 50-entry per-process cache. Every cache miss reserves one durable SQLite or shared Redis slot, depending on the selected test route, before a harness child starts. A Node preload guard permits only one fetch to the approved endpoint and rejects redirects/repeated attempts. Failures consume quota. The single shared ledger caps the approved test at ten upstream attempts. It never auto-initializes or resets. SQLite applies to one durable local filesystem; hosted tests use the same Redis approval key across all instances. Do not fund the same approval through both ledgers. Concurrent duplicate requests can consume separate slots; a two-profile plan with one slot remaining can consume it and then fail.
 
 ## Vercel checklist
 
@@ -55,7 +56,7 @@ A plan uses two independent place-insight requests, each limited to 20 results. 
 - Add durable edge rate limiting / usage controls before enabling a public credential-backed endpoint
 - Set backend secret and opt-in flag only through approved secure configuration
 - Test status, search, plan, 401/429 handling, no-results, cold start and 20-second timeout
-- Complete real desktop/mobile/keyboard visual QA; this execution environment could not run Chromium
+- Repeat the recorded desktop and narrow-layout Chromium checks after live setup; actual phone/touch QA remains pending
 - Keep live demo available through the judging period and confirm credential expiry covers it
 
 No LLM API key is needed by Afterglow. Its real MCP server is a structured, inspectable agent tool; it uses deterministic planning and real Qloo results when connected. A chat model is not simulated or bundled. The external agent host supplies its own authorized model access. A real host-to-tool live run remains unverified.

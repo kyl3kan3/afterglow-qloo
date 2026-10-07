@@ -2,11 +2,12 @@
 
 ## Passed
 
-- 63 automated tests in Node, including jsdom UI interaction tests
+- 68 automated tests in Node, including jsdom UI interaction tests
 - Real MCP stdio subprocess handshake, tool discovery, planning/replanning and safe tool errors
 - Stateless Streamable HTTP MCP requests using the official client SDK
 - Live-mode MCP path exercised against clearly labeled fixtures, with raw Qloo provenance preserved
 - Host/origin rejection and MCP payload limits
+- Protected-preview gates, shared Redis reservation wiring and HTTP/MCP fixture execution; twenty competing clients permit only ten harness invocations in the fixture model (actual Redis validation remains pending)
 - JavaScript syntax checks for application, server, API routes, scripts and tests
 - Static client build to `dist/`
 - Pinned official harness installation and local help/dry-run contract inspection

@@ -1,6 +1,6 @@
 {
   "name": "afterglow-qloo",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "A two-taste date-night planner with transparent Qloo grounding.",

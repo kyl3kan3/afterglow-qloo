@@ -23,9 +23,9 @@ An authorized owner must enter these in this project's settings through secure s
 - `AFTERGLOW_ORIGIN=https://afterglow-qloo.vercel.app` as non-secret Production configuration, then redeploy. Until this is set, hosted MCP rejects its public hostname; local MCP protocol tests still work
 - Keep Production `QLOO_ENABLED=false`
 - After the shared quota store and protected preview are approved and ready, enter `QLOO_API_KEY` and `QLOO_TEST_REDIS_TOKEN` as Secret values directly. Never put them in chat, source, command arguments or reports
-- Configure the verified preview origin, store URL and fixed budget ID as non-secret Preview values. Do not reuse another app's credentials or storage
+- Configure the verified store URL and fixed budget ID as non-secret Preview values. The preview derives its allowed origin from its unique platform-provided deployment URL; aliases are rejected. Do not reuse another app's credentials or storage
 
-The prepared Redis adapter remains unwired. It needs one durable, isolated approval counter and real datastore verification before any hosted live route can be enabled. The only currently implemented live path is isolated stdio with one durable SQLite ledger and at most ten total attempts.
+Version 0.4 wires the Redis adapter into an explicitly enabled protected-preview route. It still needs one durable, isolated approval counter, actual datastore verification and anonymous-access rejection checks before live use. Production remains blocked. See [TEST_BUDGET.md](TEST_BUDGET.md) for exact flags and the Vercel Authentication boundary. No real Qloo or agent run is claimed.
 
 ## Devpost
 
