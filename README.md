@@ -18,7 +18,7 @@ A date-night planner that makes room for two different tastes.
 
 ## Run locally
 
-Requires Node.js 22.19 or newer. Tested with Node.js 24.19.0.
+Requires Node.js 24.x. Tested with Node.js 24.19.0.
 
 ```sh
 npm ci --ignore-scripts
@@ -61,7 +61,7 @@ Live mode produces a three-place discovery shortlist, not a verified dinner/acti
 
 Public live access is blocked in code. Isolated stdio live tests require a durable ten-request maximum budget; see [TEST_BUDGET.md](docs/TEST_BUDGET.md). No real credential was read, copied, configured or used during this build. Follow [INTEGRATION.md](docs/INTEGRATION.md) after the owner approves server-side credential configuration and a bounded live test. Never put keys in this repository, the browser or chat.
 
-`vercel.json` is a deployment starting point, **not a verified deployment**. Publication is prepared as an explicitly labeled sample demo. Live Vercel access remains unimplemented until shared durable quota storage and access controls are configured and tested. The SQLite test route does not make the hosted app live-ready. See the verification document for completed and pending checks.
+The [public sample demo](https://afterglow-qloo.vercel.app/) is deployed on Vercel. It is explicitly labeled fictional sample mode; see [deployment verification](docs/DEPLOYMENT.md). Live Vercel access remains unimplemented until shared durable quota storage and access controls are configured and tested. The SQLite test route does not make the hosted app live-ready. See the verification document for completed and pending checks.
 
 ## Agentic tool interface
 
@@ -72,3 +72,7 @@ There is **no bundled LLM and no autonomous in-app model loop**. No model/provid
 ## Competition
 
 Prepared for the [Qloo Agentic Hackathon](https://qloo.devpost.com/) from original code. [Official rules](https://qloo.devpost.com/rules) require actual Qloo integration, a functional accessible demo, public source and an open-source license. This local sample build is not submission-ready on its own. The source is available under the [MIT license](LICENSE).
+
+## Dependency installation
+
+Use the committed lockfile with `npm ci --ignore-scripts`. Scoped overrides pin `brace-expansion` 5.0.12 and `undici` 8.10.2 beneath pi-coding-agent 0.84.2. The root lock intentionally omits that package's `hasShrinkwrap` marker so npm installs the patched versions; regenerating the lock from scratch can restore the upstream versions. Verify actual installed package versions after dependency changes. The official Qloo harness remains pinned at 0.1.26.

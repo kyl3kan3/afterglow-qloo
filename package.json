@@ -1,11 +1,11 @@
 {
   "name": "afterglow-qloo",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "type": "module",
   "description": "A two-taste date-night planner with transparent Qloo grounding.",
   "engines": {
-    "node": ">=22.19.0"
+    "node": "24.x"
   },
   "scripts": {
     "start": "node server.mjs",
@@ -22,5 +22,11 @@
   },
   "devDependencies": {
     "jsdom": "^30.1.1"
+  },
+  "overrides": {
+    "@earendil-works/pi-coding-agent@0.84.2": {
+      "brace-expansion": "5.0.12",
+      "undici": "8.10.2"
+    }
   }
 }

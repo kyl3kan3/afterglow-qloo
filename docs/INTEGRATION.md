@@ -2,7 +2,7 @@
 
 ## Required approvals before live work
 
-The owner has approved Qloo configuration and up to ten included-quota tests. Credentials still require direct secure owner entry, and quota/expiry must be verified. Vercel sign-in is a separate pending approval. No live request has been made. Public HTTP/Vercel live execution is now blocked in code; see [TEST_BUDGET.md](TEST_BUDGET.md).
+The owner has approved Qloo configuration and up to ten included-quota tests. Credentials still require direct secure owner entry, and quota/expiry must be verified. The sample is deployed through the existing authenticated Vercel connector. Its environment-variable writes are blocked with HTTP 403, so owner entry is still required. No live request has been made. Public HTTP/Vercel live execution is now blocked in code; see [TEST_BUDGET.md](TEST_BUDGET.md).
 
 1. Approve entering the owner's event-issued Qloo credential into the chosen backend's secret store. The owner must enter it through an authorized secure mechanism; do not paste it into chat or source files. Destination should be specified (for example, the new Afterglow project on the owner's Vercel account). This creates ongoing server access to Qloo.
 2. Confirm the event credential's quota, rate limit and expiry, then approve an initial cap of ten live requests using only public cultural favorites and a city. No paid requests are authorized by this build.
@@ -17,7 +17,7 @@ The owner has approved Qloo configuration and up to ten included-quota tests. Cr
 - `AFTERGLOW_ORIGIN`: exact verified deployment origin (e.g. the new project’s https origin), required to allow its hostname for HTTP MCP; localhost is permitted for local testing
 - `PORT=4177`: local development only
 
-The adapter pins `@qloo/qloo-harness` 0.1.26. Node must be at least 22.19.0. It invokes the official `qloo api search` and `qloo api insights` surfaces using `execFile`, no shell, a 20-second timeout and 2 MiB output cap. Arguments include required `--query` / `--type` options and validated JSON parameters. The key is never a command argument.
+The adapter pins `@qloo/qloo-harness` 0.1.26. The application pins Node 24.x (the harness itself requires at least 22.19.0). It invokes the official `qloo api search` and `qloo api insights` surfaces using `execFile`, no shell, a 20-second timeout and 2 MiB output cap. Arguments include required `--query` / `--type` options and validated JSON parameters. The key is never a command argument.
 
 The child receives a minimal environment containing the endpoint, credential and `QLOO_TRUSTED_BASE_URL` equal to that same hard-coded official hackathon endpoint. HOME points to an empty temporary location so an unrelated saved Qloo configuration cannot be used as a fallback. Nothing writes a Qloo config file.
 

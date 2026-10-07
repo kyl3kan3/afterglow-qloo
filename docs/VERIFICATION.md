@@ -1,4 +1,4 @@
-# Verification — October 6, 2026
+# Verification — October 7, 2026
 
 ## Passed
 
@@ -31,13 +31,16 @@
 
 - A real LLM/agent host deciding to invoke the tools with live Qloo data
 - Live Qloo authentication or response behavior: no real credential or live API call used
-- Vercel build/deployment/serverless packaging: configuration prepared, no external deployment
-- Real browser layout, screenshots, accessibility tree, screen reader behavior or responsive geometry
-- Native download/save behavior in a browser
+- Live Qloo subprocess execution in Vercel remains untested; the sample functions deploy successfully
+- Screen-reader behavior, touch-device input and native phone hardware remain untested
 - Devpost submission
 - Public deployment verification is recorded separately when deployment is complete
 
-## Browser QA blocker
+## Browser QA
+
+Public deployment tested in cloud Chromium: sample generation, save/reload/reopen, Escape/reopen, stop swaps, $50-budget plan ($34), disabled live mode and native text export. Desktop width 1165 and phone-width CSS viewport 388 (using 300% browser zoom) had no horizontal overflow; the dialog fit inside the narrow viewport. Actual device emulation is unavailable because this cloud browser blocks DevTools. A saved-state label issue discovered during swaps was fixed and covered by the existing revision test. A desktop screenshot was captured for release review.
+
+The following local-preview limitation occurred before deployment:
 
 The installed Chromium process failed to create its required Unix socket (`Operation not permitted`) both normally and after reviewed escalation. The available cloud browser rejected the local URL with `ERR_BLOCKED_BY_CLIENT`. The current Sites portable-preview workflow has no supported user-facing preview/forwarding tool available here. No workaround or public publication was used.
 
@@ -45,9 +48,11 @@ The installed Chromium process failed to create its required Unix socket (`Opera
 
 ## Remaining release work
 
-1. Approve and configure backend Qloo access using a secure flow
+1. Configure the already-approved backend Qloo test access through secure user entry, after verifying quota/expiry
 2. Run a bounded live smoke test and verify event limits
-3. Run real browser QA on desktop and phone widths, keyboard, Escape/reopen, save/reload, swap and export
+3. Complete a live Qloo agent demonstration and device-specific QA
 4. Add durable deployment-level usage controls before public live access
-5. Verify serverless packaging on a preview deployment
-6. Source is published under MIT; publish and verify the sample demo, then record the deployment and commit
+5. Verify hosted MCP origin configuration and live serverless execution on a protected preview
+6. Recheck official Devpost requirements and finalize truthful submission assets
+
+Production dependency audit after the scoped patch reports zero known vulnerabilities in the installed dependency graph; this is not a repository-wide security clearance. Exact package versions were checked after clean npm ci and npm install.
