@@ -1,5 +1,7 @@
 # Deployment and remaining submission gates
 
+**Current status:** the October 27 [readiness checklist](READINESS.md) supersedes the historical setup instructions below. The existing protected Preview is READY; anonymous status/MCP requests require sign-in. Current authenticated live configuration and the existing quota counter remain unverified. Reuse this project/database and respect prior HTTP 403 restrictions.
+
 The public fictional-sample demo is available at **https://afterglow-qloo.vercel.app/**. It does not make live Qloo calls and is not yet a complete Qloo hackathon entry.
 
 ## Verified October 7, 2026

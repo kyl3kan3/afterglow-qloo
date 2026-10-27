@@ -59,7 +59,9 @@ Live mode produces a three-place discovery shortlist, not a verified dinner/acti
 
 ## Live connection and release
 
-Public production live access is blocked in code. Isolated stdio or protected-preview live tests require a durable ten-request maximum budget; see [TEST_BUDGET.md](docs/TEST_BUDGET.md). No real credential was read, copied, configured or used during this build. Follow [INTEGRATION.md](docs/INTEGRATION.md) after the owner approves server-side credential configuration and a bounded live test. Never put keys in this repository, the browser or chat.
+See the [October 27 readiness checklist](docs/READINESS.md) for current deployment evidence, the tested local candidate and exact remaining live-integration/submission gates.
+
+Public production live access is blocked in code. Isolated stdio or protected-preview live tests require a durable ten-request maximum budget; see [TEST_BUDGET.md](docs/TEST_BUDGET.md). No real credential was read, copied, configured or used during this build. Follow [INTEGRATION.md](docs/INTEGRATION.md) under the owner's existing scoped authorization, after reconciling prior usage and verifying remaining quota/expiry and secure runtime configuration. Never put keys in this repository, the browser or chat.
 
 The [public sample demo](https://afterglow-qloo.vercel.app/) is deployed on Vercel. It is explicitly labeled fictional sample mode; see [deployment verification](docs/DEPLOYMENT.md). The protected-preview route is implemented but disabled until the shared durable quota store and Vercel Authentication are configured and verified. It has fixture coverage, not live Qloo proof. The SQLite test route does not make the hosted app live-ready. See the verification document for completed and pending checks.
 

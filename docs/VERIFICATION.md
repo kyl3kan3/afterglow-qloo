@@ -1,4 +1,20 @@
-# Verification — October 7, 2026
+# Verification
+
+## October 27, 2026 — local release candidate
+
+Baseline: `1d1b12216e37ff2636f88e1a7207dd2354136bec`, tested on Windows with checksum-verified Node 24.19.0 and the committed dependency lockfile (`npm ci --ignore-scripts`).
+
+- **72/72 automated tests passed**, zero failures, including real MCP stdio/HTTP clients, twenty-process SQLite quota enforcement, installed harness no-network transport fixtures and jsdom interactions.
+- JavaScript syntax checks, static build and `git diff --check` passed.
+- Added regressions for stopping after the first failed profile query, rejecting both hosted Redis URL aliases on the isolated SQLite path, and ignoring stale taste searches after reopening the dialog.
+- Browser requests wait up to 55 seconds, within the 60-second hosted function limit. A fake-clock regression verifies a plan can finish after two slow sequential harness calls and quota checks (46 seconds) without the old premature browser abort.
+- Harness ESM preloads now work with Windows file URLs. Child processes use fresh explicit Qloo config directories; tests verify isolation and cleanup after both success and authentication errors.
+- Corrupt-ledger initialization closes its SQLite handle; its existing fail-closed and test cleanup checks pass on Windows.
+- Read-only hosted checks: public status HTTP 200 with live disabled by policy; existing Preview READY at the baseline commit; anonymous Preview status redirects to Vercel SSO and MCP initialization returns HTTP 401.
+
+**No live Qloo, actual Redis, authenticated Preview, or live agent-host validation was performed.** Browser visual rendering, screen-reader and hardware/touch checks were not repeated. This candidate has not been pushed, deployed or submitted. See [current readiness and blockers](READINESS.md); the following October 7 record is historical.
+
+## October 7, 2026 record
 
 ## Passed
 

@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {mkdtempSync,rmSync,writeFileSync,readFileSync} from 'node:fs';import {tmpdir} from 'node:os';import {join} from 'node:path';import {fileURLToPath} from 'node:url';import {spawn} from 'node:child_process';import {execFile} from 'node:child_process';import {promisify} from 'node:util';
+import {mkdtempSync,rmSync,writeFileSync,readFileSync} from 'node:fs';import {tmpdir} from 'node:os';import {join} from 'node:path';import {pathToFileURL} from 'node:url';import {spawn} from 'node:child_process';import {execFile} from 'node:child_process';import {promisify} from 'node:util';
 import {initializeTestBudget,inspectTestBudget,reserveTestRequest} from '../lib/test-budget.mjs';
 import {createQlooClient,integrationStatus,requestArguments} from '../lib/qloo.mjs';
 const root=mkdtempSync(join(tmpdir(),'afterglow-budget-'));test.after(()=>rmSync(root,{recursive:true,force:true}));let n=0;
@@ -15,7 +15,7 @@ test('budget persists across clients and restarts, counts failed calls, and neve
  assert.throws(()=>initializeTestBudget(path,{limit:10,expiresAt:new Date(Date.now()+60000).toISOString(),approvalId:'new'}),e=>e.code==='EEXIST');
 });
 test('twenty competing OS processes can reserve only ten requests',async()=>{
- const path=budget(),module=fileURLToPath(new URL('../lib/test-budget.mjs',import.meta.url));
+ const path=budget(),module=new URL('../lib/test-budget.mjs',import.meta.url).href;
  const outcomes=await Promise.all(Array.from({length:20},()=>new Promise((resolve,reject)=>{const p=spawn(process.execPath,['--input-type=module','-e',`import {reserveTestRequest} from ${JSON.stringify(module)};try{reserveTestRequest(process.argv[1]);process.exit(0)}catch{process.exit(2)}`,path],{stdio:'ignore'});p.on('error',reject);p.on('exit',resolve);})));assert.equal(outcomes.filter(c=>c===0).length,10);assert.equal(inspectTestBudget(path).used,10);
 });
 test('missing, corrupt and expired budgets fail closed without subprocesses',async()=>{
@@ -37,7 +37,7 @@ function transportFixture(path,record,status=200){
  const body=status===200?{results:[{entity_id:'fixture',name:'Fixture entity'}]}:{message:`${status} fixture error`};
  writeFileSync(path,`import https from 'node:https';import {EventEmitter} from 'node:events';import {Readable} from 'node:stream';import {writeFileSync} from 'node:fs';let calls=0;https.request=(url,options,callback)=>{writeFileSync(${JSON.stringify(record)},JSON.stringify({calls:++calls,origin:new URL(url).origin,agent:options.agent}));const req=new EventEmitter();req.end=()=>queueMicrotask(()=>{const res=Readable.from([Buffer.from(${JSON.stringify(JSON.stringify(body))})]);res.statusCode=${status};res.headers={'content-type':'application/json'};callback(res);});req.destroy=error=>queueMicrotask(()=>req.emit('error',error));return req;};`);
 }
-async function runFixture(fixture){return promisify(execFile)(process.execPath,['--import',fixture,...requestArguments('search',{query:'Nina Simone',take:1})],{env:{PATH:process.env.PATH,HOME:root,QLOO_API_KEY:'fixture-not-a-credential',QLOO_BASE_URL:'https://hackathon.api.qloo.com',QLOO_TRUSTED_BASE_URL:'https://hackathon.api.qloo.com'},timeout:20000});}
+async function runFixture(fixture){return promisify(execFile)(process.execPath,['--import',pathToFileURL(fixture).href,...requestArguments('search',{query:'Nina Simone',take:1})],{env:{PATH:process.env.PATH,HOME:root,USERPROFILE:root,QLOO_HOME:join(root,'.qloo'),QLOO_API_KEY:'fixture-not-a-credential',QLOO_BASE_URL:'https://hackathon.api.qloo.com',QLOO_TRUSTED_BASE_URL:'https://hackathon.api.qloo.com'},timeout:20000});}
 test('installed official API harness uses one HTTPS request against a no-network fixture',async()=>{
  const fixture=join(root,'https-fixture.mjs'),record=join(root,'attempts.json');transportFixture(fixture,record);
  const {stdout}=await runFixture(fixture);assert.match(stdout,/Fixture entity/);assert.deepEqual(JSON.parse(readFileSync(record)),{calls:1,origin:'https://hackathon.api.qloo.com',agent:false});
