@@ -1,4 +1,4 @@
-> Version 0.4: Production live calls remain blocked. One genuine protected-Preview Qloo search is verified; a complete two-profile Insights plan remains pending. See [test budget](TEST_BUDGET.md) for the original counter and pending hosted expansion.
+> Version 0.4: Production live calls remain blocked. Protected Preview `eb3ca64` has a verified live two-profile Insights plan. The original counter is cap 100, used 3, with 97 remaining. Judge access works, but expires 55 seconds before judging ends; private handoff remains pending. See [test budget](TEST_BUDGET.md).
 
 # Afterglow as an agentic tool
 
@@ -6,15 +6,15 @@
 
 The original UI is a deterministic planner. It is not a chatbot and does not run an LLM. Version 0.2 adds a genuine Model Context Protocol server that an external agent can invoke. It implements the competition's permitted **agentic-tool** architecture rather than adding an unapproved paid model dependency.
 
-A protocol client successfully initialized the actual server, listed and called its tools, planned a sample evening, and replanned under a lower budget. Both stdio and stateless Streamable HTTP transports are tested. A fixture test traverses the live Qloo tool path without network calls. Those fixtures establish protocol behavior, not autonomous model execution or complete live Qloo behavior. Separately, one genuine hosted artist search returned HTTP 200 and six candidates; full live Insights planning remains pending.
+A protocol client successfully initialized the actual server, listed and called its tools, planned a sample evening, and replanned under a lower budget. Both stdio and stateless Streamable HTTP transports are tested. A fixture test traverses the live Qloo tool path without network calls. Those fixtures establish protocol behavior, not autonomous model execution. Separately, a genuine hosted artist search returned HTTP 200 and six candidates, followed by a live plan returning HTTP 200, four shared candidates and three stops. That plan consumed exactly two original-counter reservations.
 
 There is no separate disabled model-provider adapter because no model lives in this application. The Qloo backend is disabled by default. When an external model host is used, it supplies its own authorized model and makes the tool-use decisions. Such a run is useful optional validation, not a separate published submission requirement.
 
-## Hosted budget candidate and actual state
+## Hosted budget and actual state
 
-The published 72-test baseline at `b8cbd0764e59da600b8e8a2844fda0860692f4e9` has a hosted ceiling of ten. The separate local candidate defaults to ten when `QLOO_TEST_APPROVED_CAP` is unset. Explicit `QLOO_TEST_APPROVED_CAP=100` opts the approved protected Preview into a ceiling of 100; reservations fail closed unless the actual counter cap matches the configured cap. Status reports the configured ceiling, not proof of remaining quota. The isolated SQLite route retains its hard maximum of ten and must not fund the same hosted approval.
+The current [protected Preview](https://afterglow-qloo-i2dn18naf-kyl3kan3-6147s-projects.vercel.app/) is READY at `eb3ca64`. Hosted configuration defaults to ten when `QLOO_TEST_APPROVED_CAP` is unset; explicit `QLOO_TEST_APPROVED_CAP=100` is now verified and matches the actual Redis cap. Reservations fail closed on a cap mismatch. Status reports the configured ceiling, not proof of remaining quota. The isolated SQLite route retains its hard maximum of ten and must not fund the same hosted approval. Dated automated-test counts remain separate in [VERIFICATION.md](VERIFICATION.md).
 
-The last executed original counter state remains **cap 10, used 1, original expiry unchanged**. The owner approved 100 hosted requests total, including that used request, and a secret deployment-specific judge link through `2026-11-06T04:45:00Z`. The same-counter amendment, candidate release and judge-link creation/verification remain pending. Do not report 99 remaining until an actual cap of 100 with used 1 preserved is verified. Never put bearer links, private approval identities or real Qloo results in public source.
+The original counter is **cap 100, used 3, 97 remaining**, expiry `2026-11-06T04:45:00Z`: one search plus exactly two plan reservations. The amendment preserved spent usage rather than resetting it. Deployment-specific access works in an independent browser and its status check made no Qloo request. **Actual access expiry is `2026-11-06T04:44:05Z`, 55 seconds before judging end.** That gap and private judge-link delivery/placement remain pending, as does submission. The bearer value is retained only in memory and must not be written to any file. Keep private grant/approval identities and real Qloo results out of public source.
 
 ## Tools
 
@@ -51,12 +51,12 @@ For hosting, the Vercel route is `api/mcp.js`. Set `AFTERGLOW_ORIGIN` to the exa
 
 ## Live release checks and optional host validation
 
-1. Verify the candidate code and the original shared counter's actual cap, spent usage and expiry; preserve the same store/identity and do not reset or duplicate it.
-2. Complete the prepared two-profile Insights plan using the already verified public favorites. No fresh search is needed. Verify actual shared recommendations and truthful provenance/unknowns in the core product flow.
-3. Verify the approved deployment-specific judge access mechanism, free end-to-end use through judging end and source disclosures. The secret bearer link belongs only in the private judge handoff. Production live stays off.
+1. Preserve the verified code/counter cap match, original store/identity and spent usage; do not reset or duplicate it. Reconcile the remaining snapshot before more requests.
+2. The live two-profile HTTP plan passed with four shared candidates and three stops. No fresh search is needed merely to rebuild its synthetic inputs. Preserve provenance/unknowns without publishing raw results.
+3. Independent browser verification requires Vercel login without the private link; the link opens the app and its query is removed. Status returned HTTP 200, enabled `true`, maximum 100. Switching to live mode displayed the live banner, empty actual-entity choosers, city input and expected disclosures, without a search/plan request; the counter reread stayed cap 100, used 3, with the same expiry. Reconcile the actual access expiry's 55-second gap and finish private delivery/placement before claiming complete judging coverage. Production live stays off.
 4. Optionally connect a compatible external model host through a separately authorized connection and demonstrate tool discovery, live planning and replanning. No new model account or key is inherently required, and this optional test must share the same hosted counter.
 
-Merely exposing MCP, using fixtures or showing the sample UI does not establish a complete live Qloo product. The published requirements do not separately require external host/model interaction proof or a demo video. Official Rules section 4 permits private-site judge credentials and requires free, unrestricted access through judging end; section 11.4 gives those Rules precedence over inconsistent event materials. Final eligibility is the organizer's judgment.
+Current product evidence includes the genuine hosted live plan, independent live-form inspection and the recorded 11 jsdom UI tests. External host/model interaction proof and a demo video are not separately required submission artifacts. Additional device/accessibility QA was not performed; that is a validation limit rather than an extra eligibility gate. Official Rules section 4 permits private-site judge credentials and requires free, unrestricted access through judging end; section 11.4 gives those Rules precedence over inconsistent event materials. Final eligibility is the organizer's judgment.
 
 ## Sources
 
