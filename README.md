@@ -12,6 +12,7 @@ A date-night planner that makes room for two different tastes.
 - Save and reopen nights on this browser, revise them, and export plain text
 - Inspect source/provenance and the explicit missing-integration state
 - Run the server-only Qloo integration against test fixtures
+- Search public artists on the protected Preview; one genuine hosted search is verified, while complete two-profile live planning remains pending
 - Connect a real external agent through MCP over stdio or stateless Streamable HTTP
 
 **The initial experience is a fictional sample.** All sample places, prices and scores are hand-authored or calculated locally. There are no model calls, real reservations or Qloo calls in sample mode. The app never claims sample data is Qloo output.
@@ -59,17 +60,19 @@ Live mode produces a three-place discovery shortlist, not a verified dinner/acti
 
 ## Live connection and release
 
-See the [October 27 readiness checklist](docs/READINESS.md) for current deployment evidence, the tested local candidate and exact remaining live-integration/submission gates.
+See the [October 28 readiness checklist](docs/READINESS.md) for current deployment evidence, the local candidate and remaining live-planning/judging-access work.
 
-Public production live access is blocked in code. Isolated stdio or protected-preview live tests require a durable ten-request maximum budget; see [TEST_BUDGET.md](docs/TEST_BUDGET.md). No real credential was read, copied, configured or used during this build. Follow [INTEGRATION.md](docs/INTEGRATION.md) under the owner's existing scoped authorization, after reconciling prior usage and verifying remaining quota/expiry and secure runtime configuration. Never put keys in this repository, the browser or chat.
+Public Production live access remains blocked. On October 28, a securely configured protected Preview completed one genuine artist search, and the original durable counter moved from zero to one used request under its ten-request cap. Full two-profile Insights planning remains unverified. Never put keys, raw Qloo responses or private access links in this repository, the browser source or chat.
 
-The [public sample demo](https://afterglow-qloo.vercel.app/) is deployed on Vercel. It is explicitly labeled fictional sample mode; see [deployment verification](docs/DEPLOYMENT.md). The protected-preview route is implemented but disabled until the shared durable quota store and Vercel Authentication are configured and verified. It has fixture coverage, not live Qloo proof. The SQLite test route does not make the hosted app live-ready. See the verification document for completed and pending checks.
+The owner approved a hosted bundle of 100 requests total, including the already-used request, and a deployment-only judge access link through November 6, 2026, 04:45 UTC. Execution and verification of that expanded bundle and link remain pending. The local candidate requires explicit `QLOO_TEST_APPROVED_CAP=100` for the protected hosted route; its default remains ten, and the separate SQLite route stays capped at ten. The flag neither changes stored quota nor creates authorization: the original shared counter must be updated in place under the approved scope, preserving used requests. See [TEST_BUDGET.md](docs/TEST_BUDGET.md) and [INTEGRATION.md](docs/INTEGRATION.md).
+
+The [public sample demo](https://afterglow-qloo.vercel.app/) is deployed on Vercel and remains explicitly fictional. The protected Preview has configured live access, working anonymous-access rejection, and one verified search; the two-profile plan and private judge handoff are pending. The judge link will be a bearer secret delivered privately, never added to public source. See [deployment verification](docs/DEPLOYMENT.md) for the last completed deployment and the approved next-release checklist.
 
 ## Agentic tool interface
 
 This project implements the competition’s **agentic-tool** route. A real MCP server exposes status, sample signals, Qloo entity search and constrained planning, plus a transparent planning prompt. An external agent can discover tools, search, call the planner, inspect the result and replan after user feedback. Both stdio and Streamable HTTP are tested with real MCP clients. See [AGENT_INTEGRATION.md](docs/AGENT_INTEGRATION.md).
 
-There is **no bundled LLM and no autonomous in-app model loop**. No model/provider is simulated. The sample UI alone is not evidence of a working Qloo-powered agent. Actual live Qloo execution from a chosen agent client is still required before claiming a competition-ready integration. No extra model API key is required by Afterglow; the agent host uses its own authorized model access.
+There is **no bundled LLM and no autonomous in-app model loop**. No model/provider is simulated. A real model-directed external-host run can strengthen the agentic-tool evidence, but it is not a separately listed submission requirement. The complete live Qloo planning flow and usable judge access still need verification; a fictional sample alone does not establish them. No extra model API key is required by Afterglow; any external agent host supplies its own authorized model access.
 
 ## Competition
 

@@ -6,6 +6,10 @@ const root=mkdtempSync(join(tmpdir(),'afterglow-budget-'));test.after(()=>rmSync
 function budget(limit=10){const path=join(root,`${++n}.sqlite`);initializeTestBudget(path,{limit,expiresAt:new Date(Date.now()+60000).toISOString(),approvalId:'test-fixture-only'});return path;}
 const env=path=>({QLOO_ENABLED:'true',QLOO_API_KEY:'fixture-not-a-credential',QLOO_TEST_LEDGER:path});
 const response={stdout:'[]'};
+test('isolated SQLite cannot initialize a hundred-request budget',()=>{
+ const path=join(root,'unapproved-hundred.sqlite');
+ assert.throws(()=>initializeTestBudget(path,{limit:100,expiresAt:new Date(Date.now()+60000).toISOString(),approvalId:'fixture-only'}),/limit from 1 to 10/);
+});
 test('budget persists across clients and restarts, counts failed calls, and never resets on init',async()=>{
  const path=budget(2);const a=createQlooClient({env:env(path),access:'stdio',execute:async()=>{throw new Error('timeout');}});
  await assert.rejects(()=>a.request('search',{query:'first'}),e=>e.code==='QLOO_UNAVAILABLE');

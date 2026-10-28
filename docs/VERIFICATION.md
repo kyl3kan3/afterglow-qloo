@@ -73,3 +73,11 @@ The installed Chromium process failed to create its required Unix socket (`Opera
 6. Recheck official Devpost requirements and finalize truthful submission assets
 
 Production dependency audit after the scoped patch reports zero known vulnerabilities in the installed dependency graph; this is not a repository-wide security clearance. Exact package versions were checked after clean npm ci and npm install.
+
+## October 28 addendum
+
+The approved hosted-cap candidate passed 82/82 tests on Node 24.19.0 with `--test-concurrency=1`, plus syntax, static build and whitespace checks. Hosted configuration defaults to ten and explicitly permits a cap up to 100; stored/runtime cap mismatch fails before reservation. Tests cover the generic operator compare-and-set amendment, preserved usage, audit idempotency, cap exhaustion, concurrency and expiry. SQLite remains capped at ten. Earlier installed-harness startup timeouts in parallel runs did not recur in the complete serial pass; the production 20-second timeout was unchanged.
+
+The published `b8cbd076` candidate completed one real protected-Preview artist search: HTTP 200, six candidates, original shared counter increased by exactly one. Anonymous Preview status returned 302 to Vercel SSO; anonymous MCP initialization returned 401; Production status still blocked live execution. No raw Qloo response dataset or credential is included here.
+
+An unpublished local UI improvement now reuses recent verified candidates across both profile choosers without another search. All 11 UI tests pass on Node 24.19.0, including separate selections, reopening, sample separation and stale-result rejection. This is page-memory reuse; a reload starts with no candidates. No additional Qloo request or deployment was made for this change. The published 72-test record above remains a separate historical result.

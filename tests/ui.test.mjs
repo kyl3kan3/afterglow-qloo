@@ -7,6 +7,26 @@ test('UI initial rendering, honest mode disclosure and missing integration',asyn
 test('UI add/remove, save/open, swap and save revision flows',async()=>{const {w,doc,click}=setup();await wait();click('.add-taste');click('[data-taste="nature"]');assert.match(doc.querySelector('#tastes-a').textContent,/Mary Oliver/);click('#taste-dialog .close-dialog');click('[data-remove="nature"]');assert.doesNotMatch(doc.querySelector('#tastes-a').textContent,/Mary Oliver/);click('#save-plan');click('#saved-tab');assert.equal(doc.querySelectorAll('.saved-card').length,1);click('[data-open]');const old=doc.querySelector('.stop-card h4').textContent;click('[data-swap="0"]');click('.alternative');assert.notEqual(doc.querySelector('.stop-card h4').textContent,old);const changed=doc.querySelector('.stop-card h4').textContent;assert.match(doc.querySelector('#save-plan').textContent,/Save changes/);click('#save-plan');assert.match(doc.querySelector('#save-plan').textContent,/Saved/);click('#saved-tab');click('[data-open]');assert.equal(doc.querySelector('.stop-card h4').textContent,changed);assert.equal(JSON.parse(w.localStorage.getItem('afterglow.saved.v1')).length,1);w.close();});
 test('UI cannot select more than five tastes',async()=>{const {w,doc,click}=setup();await wait();click('.add-taste');click('[data-taste="nature"]');click('[data-taste="pop"]');click('[data-taste="food"]');assert.equal(doc.querySelector('#count-a').textContent,'5 / 5');assert.match(doc.querySelector('#toast').textContent,/Five/);w.close();});
 
+test('both live profile choosers reuse recent Qloo candidates after one search',async t=>{
+ const entities=[{id:'00000000-0000-0000-0000-000000000001',name:'Fixture artist A',kind:'artist'},{id:'00000000-0000-0000-0000-000000000002',name:'Fixture artist B',kind:'artist'}];
+ let searches=0;
+ const {w,doc,click}=setup({liveEnabled:true,searchResponse:async()=>{searches++;return{ok:true,json:async()=>({entities})};}});
+ t.after(()=>w.close());await wait();click('#source-button');click('#use-live');click('.add-taste[data-person="0"]');
+ assert.equal(doc.querySelectorAll('#taste-options button').length,0);
+ doc.querySelector('#taste-search').value='Fixture artist';click('#search-button');await wait();
+ assert.equal(searches,1);assert.equal(doc.querySelectorAll('#taste-options button').length,2);click(`[data-taste="${entities[0].id}"]`);
+ click('#taste-dialog .close-dialog');click('.add-taste[data-person="1"]');
+ assert.match(doc.querySelector('#search-feedback').textContent,/Recent Qloo search results/);assert.equal(doc.querySelectorAll('#taste-options button').length,2);
+ assert.equal(doc.querySelector(`[data-taste="${entities[0].id}"]`).getAttribute('aria-pressed'),'false');click(`[data-taste="${entities[1].id}"]`);
+ assert.match(doc.querySelector('#tastes-a').textContent,/Fixture artist A/);assert.match(doc.querySelector('#tastes-b').textContent,/Fixture artist B/);
+ assert.equal(doc.querySelector('#count-a').textContent,'1 / 5');assert.equal(doc.querySelector('#count-b').textContent,'1 / 5');
+ click('#taste-dialog .close-dialog');click('.add-taste[data-person="0"]');
+ assert.equal(doc.querySelector(`[data-taste="${entities[0].id}"]`).getAttribute('aria-pressed'),'true');assert.equal(doc.querySelector(`[data-taste="${entities[1].id}"]`).getAttribute('aria-pressed'),'false');
+ assert.match(doc.querySelector('#search-feedback').textContent,/Recent Qloo search results/);assert.equal(searches,1);
+ click('#taste-dialog .close-dialog');click('#source-button');click('#use-sample');await wait();click('.add-taste[data-person="0"]');
+ assert.equal(doc.querySelector('#search-feedback').textContent,'');assert.equal(doc.querySelector('[data-taste="jazz"]')!==null,true);assert.doesNotMatch(doc.querySelector('#taste-options').textContent,/Fixture artist/);assert.equal(searches,1);
+});
+
 test('reopened taste dialog ignores an earlier search and permits a new search',async t=>{
  const pending=[];
  const {w,doc,click}=setup({liveEnabled:true,searchResponse:()=>new Promise(resolve=>pending.push(resolve))});
@@ -19,6 +39,7 @@ test('reopened taste dialog ignores an earlier search and permits a new search',
  pending[1]({ok:true,json:async()=>({entities:[{id:'fixture-current',name:'Current search result',kind:'artist'}]})});await wait();
  assert.equal(doc.querySelector('#search-button').disabled,false);assert.match(doc.querySelector('#taste-options').textContent,/Current search result/);assert.doesNotMatch(doc.querySelector('#taste-options').textContent,/Old search result/);
  click('[data-taste="fixture-current"]');assert.equal(doc.querySelector('#count-a').textContent,'0 / 5');assert.equal(doc.querySelector('#count-b').textContent,'1 / 5');
+ click('#taste-dialog .close-dialog');click('.add-taste[data-person="0"]');assert.match(doc.querySelector('#search-feedback').textContent,/Recent Qloo search results/);assert.equal(doc.querySelectorAll('#taste-options button').length,1);assert.match(doc.querySelector('#taste-options').textContent,/Current search result/);assert.doesNotMatch(doc.querySelector('#taste-options').textContent,/Old search result/);assert.equal(pending.length,2);
 });
 test('UI invalid profile displays error and preserves old itinerary',async()=>{const {w,doc,click}=setup();await wait();const before=doc.querySelector('.result-title').textContent;while(doc.querySelector('#tastes-a button'))doc.querySelector('#tastes-a button').click();doc.querySelector('#date-form').dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await wait();assert.equal(doc.querySelector('#form-error').classList.contains('hidden'),false);assert.match(doc.querySelector('#form-error').textContent,/one and five/);assert.equal(doc.querySelector('.result-title').textContent,before);assert.equal(doc.querySelector('#generate').disabled,false);w.close();});
 
