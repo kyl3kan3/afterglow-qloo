@@ -1,4 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import http from 'node:http';import{createApi}from'../lib/http.mjs';
+import {createSearchRateLimiter} from '../lib/ip-rate-limit.mjs';
 const handler=createApi({env:{}}),server=http.createServer((req,res)=>handler(req,res));await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const base=`http://127.0.0.1:${server.address().port}`;test.after(()=>server.close());
 const input={mode:'sample',people:[['jazz'],['books']],budget:140,vibe:'intimate',location:'New York City',startTime:'18:00'};
 test('status is safe, reports disabled, and includes no secret',async()=>{const r=await fetch(`${base}/api/status`),body=await r.json();assert.equal(r.status,200);assert.equal(body.enabled,false);assert.ok(!JSON.stringify(body).includes('API_KEY'));assert.equal(r.headers.get('x-content-type-options'),'nosniff');});
@@ -7,3 +8,4 @@ test('malformed JSON and oversized request rejected',async()=>{let r=await fetch
 test('cross-site API calls rejected',async()=>{const r=await fetch(`${base}/api/plan`,{method:'POST',headers:{'sec-fetch-site':'cross-site'},body:JSON.stringify(input)});assert.equal(r.status,403);});
 test('live search fails honestly while unconfigured',async()=>{const r=await fetch(`${base}/api/search?q=Nina&type=artist`);assert.equal(r.status,503);assert.equal((await r.json()).code,'QLOO_NOT_CONFIGURED');});
 test('unknown endpoints are 404',async()=>{const r=await fetch(`${base}/api/secret`);assert.equal(r.status,404);});
+test('live search API is throttled after six requests per IP',async()=>{const searchRateLimit=createSearchRateLimiter();const throttled=createApi({env:{},searchRateLimit});const s=http.createServer((req,res)=>throttled(req,res));await new Promise(r=>s.listen(0,'127.0.0.1',r));const b=`http://127.0.0.1:${s.address().port}`;try{for(let i=0;i<6;i++){const r=await fetch(`${b}/api/search?q=Nina&type=artist`);assert.notEqual(r.status,429,`request ${i+1}`);}const r=await fetch(`${b}/api/search?q=Nina&type=artist`);assert.equal(r.status,429);assert.match((await r.json()).error,/wait a minute/);}finally{s.close();}});
