@@ -47,7 +47,7 @@ Vanilla browser JavaScript, semantic HTML and responsive CSS keep the frontend s
 - `lib/mcp.mjs` and `mcp-server.mjs`: working agent-callable MCP tools
 - `api/`: Vercel function entrypoints, including `/api/mcp`
 - `tests/`: test suites
-- `docs/`: integration, release checklist and agent-tool contract
+- `docs/`: integration, release checklist and verification notes
 
 ## Recommendation approach
 
