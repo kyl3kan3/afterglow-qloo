@@ -2,7 +2,7 @@
 
 ## Passed
 
-- 68 automated tests in Node, including jsdom UI interaction tests
+- 69 automated tests in Node, including jsdom UI interaction tests
 - Real MCP stdio subprocess handshake, tool discovery, planning/replanning and safe tool errors
 - Stateless Streamable HTTP MCP requests using the official client SDK
 - Live-mode MCP path exercised against clearly labeled fixtures, with raw Qloo provenance preserved

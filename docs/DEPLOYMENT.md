@@ -10,7 +10,7 @@ The public fictional-sample demo is available at **https://afterglow-qloo.vercel
 - `/api/search`: HTTP 503 while unconfigured; no sample substitution
 - Cloud Chromium checks: desktop layout, sample generation, save/reload/reopen, Escape/reopen, swaps within budget, $50 budget producing three stops totaling $34, unavailable live mode, and native text export
 - Responsive reflow: 388 CSS-pixel viewport through browser zoom; no horizontal overflow and dialog fits inside viewport. Device emulation is blocked in this browser; actual phone/touch behavior is not claimed
-- Node 24 runtime; dependency patch and all 63 tests, syntax checks and build passed locally
+- Node 24 runtime; dependency patch and all 69 tests, syntax checks and build passed locally
 
 The UI's saved-state indicator was corrected after browser QA: a changed saved plan shows **Save changes** until the revision is saved. The release following the initial deployment includes this correction and patched transitive dependencies.
 

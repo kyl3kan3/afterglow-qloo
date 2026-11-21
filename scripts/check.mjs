@@ -1,1 +1,4 @@
-import{execFileSync}from'node:child_process';import{readdirSync}from'node:fs';for(const dir of ['lib','public','api','scripts','tests'])for(const file of readdirSync(dir).filter(f=>/\.m?js$/.test(f)))execFileSync(process.execPath,['--check',`${dir}/${file}`]);execFileSync(process.execPath,['--check','server.mjs']);execFileSync(process.execPath,['--check','mcp-server.mjs']);console.log('All JavaScript syntax checks passed.');
+import{execFileSync}from'node:child_process';import{readdirSync}from'node:fs';
+const major=Number(process.versions.node.split('.')[0]);
+if(major<24){console.error(`Node >=24 required (package.json engines); got ${process.versions.node}.`);process.exit(1);}
+for(const dir of ['lib','public','api','scripts','tests'])for(const file of readdirSync(dir).filter(f=>/\.m?js$/.test(f)))execFileSync(process.execPath,['--check',`${dir}/${file}`]);execFileSync(process.execPath,['--check','server.mjs']);execFileSync(process.execPath,['--check','mcp-server.mjs']);console.log('All JavaScript syntax checks passed.');
